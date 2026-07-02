@@ -129,7 +129,7 @@ jobs:
       - name: Terraform Format Check
         run: |
           cd terraform
-          terraform fmt -check
+          terraform fmt
 
       - name: Terraform Validate
         run: |

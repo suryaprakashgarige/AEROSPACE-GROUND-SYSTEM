@@ -228,7 +228,6 @@ async def check_telemetry_thresholds(telemetry: Telemetry, session) -> list:
 
 async def simulation_loop():
     print("Simulation background loop started.")
-    global simulation_active
     while True:
         if not simulation_active:
             await asyncio.sleep(1)
