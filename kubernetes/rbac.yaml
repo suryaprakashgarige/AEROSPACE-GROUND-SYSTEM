@@ -1,0 +1,33 @@
+# kubernetes/rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ground-station-sa
+  namespace: aerospace-monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ground-station-reader
+  namespace: aerospace-monitoring
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ground-station-read-binding
+  namespace: aerospace-monitoring
+subjects:
+  - kind: ServiceAccount
+    name: ground-station-sa
+    namespace: aerospace-monitoring
+roleRef:
+  kind: Role
+  name: ground-station-reader
+  apiGroup: rbac.authorization.k8s.io

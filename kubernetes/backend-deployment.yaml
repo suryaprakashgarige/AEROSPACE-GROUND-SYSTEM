@@ -1,0 +1,89 @@
+# kubernetes/backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ground-station-backend
+  namespace: aerospace-monitoring
+  labels:
+    app: ground-station-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ground-station-backend
+  template:
+    metadata:
+      labels:
+        app: ground-station-backend
+    spec:
+      containers:
+        - name: backend
+          image: solvrex/ground-station-backend:latest
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRES_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: ground-station-config
+                  key: POSTGRES_SERVER
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: ground-station-config
+                  key: POSTGRES_DB
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ground-station-config
+                  key: POSTGRES_PORT
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ground-station-secrets
+                  key: postgres-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ground-station-secrets
+                  key: postgres-password
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ground-station-secrets
+                  key: secret-key
+          ports:
+            - containerPort: 8000
+              name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: aerospace-monitoring
+spec:
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http
+  selector:
+    app: ground-station-backend
+  type: ClusterIP

@@ -1,0 +1,86 @@
+erDiagram
+    users ||--o{ audit_logs : "performs"
+    satellites ||--o{ telemetry : "generates"
+    satellites ||--o{ alerts : "triggers"
+    
+    users {
+        int id PK
+        string username UNIQUE
+        string password_hash
+        string role
+        timestamp created_at
+    }
+
+    satellites {
+        string id PK
+        string name
+        string type
+        date launch_date
+        string status
+    }
+
+    telemetry {
+        bigint id PK
+        string satellite_id FK
+        timestamp timestamp
+        int orbit_number
+        numeric temperature
+        numeric battery_level
+        numeric solar_panel_voltage
+        numeric power_consumption
+        numeric cpu_usage
+        numeric memory_usage
+        numeric signal_strength
+        numeric altitude
+        numeric velocity
+        numeric latitude
+        numeric longitude
+        numeric roll
+        numeric pitch
+        numeric yaw
+        numeric fuel_remaining
+        numeric radiation_level
+        string communication_status
+        boolean gps_lock
+        string health_status
+        int error_code
+        numeric packet_loss
+        int uplink_delay
+        int downlink_delay
+    }
+
+    alerts {
+        int id PK
+        string satellite_id FK
+        timestamp timestamp
+        string metric_name
+        numeric metric_value
+        numeric threshold_value
+        string severity
+        string message
+        boolean resolved
+        timestamp resolved_at
+    }
+
+    audit_logs {
+        int id PK
+        int user_id FK
+        string action
+        string target
+        string details
+        timestamp timestamp
+    }
+
+    system_logs {
+        int id PK
+        string service_name
+        string log_level
+        string message
+        timestamp timestamp
+    }
+
+    configurations {
+        string key PK
+        string value
+        string description
+    }

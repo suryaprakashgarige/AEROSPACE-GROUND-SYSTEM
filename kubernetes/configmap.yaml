@@ -1,0 +1,11 @@
+# kubernetes/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ground-station-config
+  namespace: aerospace-monitoring
+data:
+  POSTGRES_SERVER: "postgres-db-service"
+  POSTGRES_DB: "telemetry_db"
+  POSTGRES_PORT: "5432"
+  SIMULATION_INTERVAL_SEC: "1"

@@ -1,0 +1,8 @@
+# kubernetes/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aerospace-monitoring
+  labels:
+    environment: production
+    project: satellite-telemetry
