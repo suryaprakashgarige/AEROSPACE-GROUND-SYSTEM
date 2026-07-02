@@ -5,22 +5,8 @@ import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from fastapi.testclient import TestClient
 
-from backend.app.core.database import Base, get_db
+from backend.app.core.database import Base, get_db, engine, async_session as TestingSessionLocal
 from backend.app.main import app
-
-# Use memory SQLite for fast test suite execution
-TEST_SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
-
-engine = create_async_engine(
-    TEST_SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
-
-TestingSessionLocal = async_sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
 
 @pytest.fixture(scope="session")
 def event_loop():

@@ -38,6 +38,7 @@ jobs:
       - name: Run Backend Unit Tests
         run: |
           export PYTHONPATH=$GITHUB_WORKSPACE
+          export DATABASE_URL="sqlite+aiosqlite:///:memory:"
           pytest backend/tests
 
       # Frontend Build Test

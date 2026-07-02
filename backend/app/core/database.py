@@ -4,11 +4,17 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import declarative_base
 from backend.app.core.config import settings
 
-# Create asynchronous engine
+from sqlalchemy.pool import StaticPool
+
+connect_args = {"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {}
+poolclass = StaticPool if "sqlite" in settings.DATABASE_URL else None
+
 engine = create_async_engine(
     settings.DATABASE_URL,
-    pool_pre_ping=True,
-    echo=False
+    pool_pre_ping=not ("sqlite" in settings.DATABASE_URL),
+    echo=False,
+    connect_args=connect_args,
+    poolclass=poolclass
 )
 
 # Async session maker
